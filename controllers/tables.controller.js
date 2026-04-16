@@ -2,7 +2,7 @@ import { tryConnection } from "../src/db.js";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../src/config.js";
 
-export const getTables = async (req, res) => {
+export const getTables = async (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
@@ -20,7 +20,8 @@ export const getTables = async (req, res) => {
             connection.end();
 
             if (err) {
-                return res.status(500).json({ message: "Error al consultar la DB", error: err.message });
+                err.status = 500;
+                return next(err);
             }
             //limpiar datos de la db para enviar al front
             const tableNames = results.map(row => Object.values(row)[0]);
@@ -35,11 +36,13 @@ export const getTables = async (req, res) => {
 
     } catch (error) {
         //cierre de sesión por tiempo expirado o token invalido
-        return res.status(403).json({ message: "Tu sesión ha expirado o el token es inválido." });
+        error.status = 403;
+        error.message = "Tu sesión ha expirado o el token es inválido.";
+        return next(error);
     }
 }
 
-export const getTableData = async (req, res) => {
+export const getTableData = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     const { tableName } = req.params;
 
@@ -58,7 +61,8 @@ export const getTableData = async (req, res) => {
             connection.end();
 
             if (err) {
-                return res.status(500).json({ message: "Error al consultar la tabla", error: err.message });
+                err.status = 500;
+                return next(err);
             }
 
             const columns = fields.map(field => field.name);
@@ -71,6 +75,8 @@ export const getTableData = async (req, res) => {
         });
 
     } catch (error) {
-        return res.status(403).json({ message: "Tu sesión ha expirado o el token es inválido." });
+        error.status = 403;
+        error.message = "Tu sesión ha expirado o el token es inválido.";
+        return next(error);
     }
 }
