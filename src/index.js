@@ -5,6 +5,7 @@ import { PORT } from './config.js';
 import './db.js';
 import authRoutes from '../routes/auth.routes.js';
 import tableRoutes from '../routes/tables.routes.js';
+import examenRoutes from '../routes/examen.routes.js';
 
 
 const app = Express();
@@ -14,10 +15,10 @@ app.use(morgan('dev'));
 app.use(Express.json());
 
 
-app.use('/api', authRoutes, tableRoutes);
+app.use('/api', authRoutes, tableRoutes, examenRoutes);
 
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     res.send('Servidor funcionando correctamente');
 });
 
