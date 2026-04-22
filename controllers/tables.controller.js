@@ -23,13 +23,15 @@ export const getTables = async (req, res, next) => {
                 err.status = 500;
                 return next(err);
             }
-            //limpiar datos de la db para enviar al front
             const tableNames = results.map(row => Object.values(row)[0]);
+
+            // Filtrar para que solo devuelva la tabla "clientes" si tiene permiso
+            const allowedTables = tableNames.includes('clientes') ? ['clientes'] : [];
 
             //se envia al front
             return res.json({
-                message: "Aceptado enteramente por la VPS",
-                tables: tableNames,
+                message: "Renderiza la tabla de clientes",
+                tables: allowedTables,
                 userLogueado: decoded.user
             });
         });
@@ -66,7 +68,7 @@ export const getTableData = async (req, res, next) => {
             }
 
             const columns = fields.map(field => field.name);
-            
+
             return res.json({
                 message: "Datos obtenidos con exito",
                 columns: columns,
@@ -78,5 +80,13 @@ export const getTableData = async (req, res, next) => {
         error.status = 403;
         error.message = "Tu sesión ha expirado o el token es inválido.";
         return next(error);
+    }
+}
+
+export const updateTables = async (req, res, next) => {
+    try {
+
+    } catch (error) {
+        return next(error)
     }
 }

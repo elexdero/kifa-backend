@@ -22,6 +22,13 @@ app.get('/', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
+    // Interceptar errores de permisos nativos de MySQL
+    if (err.code && err.code.includes('DENIED_ERROR')) {
+        return res.status(403).json({
+            message: "Acceso denegado: Tu rol actual no tiene permisos para realizar esta acción."
+        });
+    }
+
     const status = err.status || 500;
     return res.status(status).json({
         message: err.message
