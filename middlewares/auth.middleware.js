@@ -14,7 +14,7 @@ export const authMidd = async (req, res, next) => {
     try {
         // 1. Validación del token
         const decoded = jwt.verify(token, JWT_SECRET);
-        
+
         // 2. Establecer la conexión usando las credenciales del token
         const connection = await tryConnection(decoded.user, decoded.password);
 
