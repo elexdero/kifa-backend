@@ -14,8 +14,8 @@ export const getTables = async (req, res, next) => {
             req.db.end();
             const tableNames = results.map(row => Object.values(row)[0]);
 
-            // Filtrar para que solo devuelva la tabla "clientes" si tiene permiso
-            const allowedTables = tableNames.includes('clientes') ? ['clientes'] : [];
+            // Filtrar para que solo devuelva la tabla "trabajadores" si tiene permiso
+            const allowedTables = tableNames.includes('empleados') ? ['empleados'] : [];
 
             //se envia al front
             return res.json({
